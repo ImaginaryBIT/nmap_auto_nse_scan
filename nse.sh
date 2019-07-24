@@ -1,5 +1,5 @@
 #!/bin/bash
-#Author sheldon
+#Author ImaginaryBIT
 #Version 1.0
 
 RED='\033[0;31m'
