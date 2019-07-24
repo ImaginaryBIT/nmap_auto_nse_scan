@@ -32,9 +32,9 @@ echo -e "${GREEN}### NSE scanning started ###${NC}"
 cat $dir/TCP_open_port.xml|grep "service name"| while read line
 do
 protocol=$(echo $line | cut -d'"' -f 12)
+port=$(echo $line | cut -d'"' -f 4)
 if(ls $dir_nmap | grep -q "^$protocol")
 then
-	port=$(echo $line | cut -d'"' -f 4)
 	echo -e "${YELLOW}===> scanning on port $port $protocol${NC}"
 	nmap -Pn -sV -T4 -p$port --script="$protocol-* and not *-brute" -n $1 >> $dir/nmap_nse_scan_result.log
 else
@@ -46,9 +46,9 @@ done
 cat $dir/UDP_open_port.xml|grep "service name"| while read line
 do
 protocol=$(echo $line | cut -d'"' -f 12)
+port=$(echo $line | cut -d'"' -f 4)
 if(ls $dir_nmap | grep -q "^$protocol")
 then
-	port=$(echo $line | cut -d'"' -f 4)
 	echo -e "${YELLOW}===> scanning on port $port $protocol${NC}"
 	nmap -Pn -sU -sV -T4 -p$port --script="$protocol-* and not *-brute" -n $1 >> $dir/nmap_nse_scan_result.log
 else
