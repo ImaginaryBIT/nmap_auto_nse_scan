@@ -36,10 +36,10 @@ if(ls $dir_nmap | grep -q "^$protocol")
 then
 	port=$(echo $line | cut -d'"' -f 4)
 	echo -e "${YELLOW}===> scanning on port $port $protocol${NC}"
-	nmap -Pn -sV -T4 -p$port --script="$protocol-* and not *-brute" -n $1 >> nmap_nse_scan_result.log
+	nmap -Pn -sV -T4 -p$port --script="$protocol-* and not *-brute" -n $1 >> $dir/nmap_nse_scan_result.log
 else
 	echo -e "${RED}===> NSE for $protocol not found! continue with default script scan${NC}"
-	nmap -Pn -sV -T4 -p$port -sC -n $1 >> nmap_nse_scan_result.log
+	nmap -Pn -sV -T4 -p$port -sC -n $1 >> $dir/nmap_nse_scan_result.log
 fi
 done
 
@@ -50,11 +50,15 @@ if(ls $dir_nmap | grep -q "^$protocol")
 then
 	port=$(echo $line | cut -d'"' -f 4)
 	echo -e "${YELLOW}===> scanning on port $port $protocol${NC}"
-	nmap -Pn -sU -sV -T4 -p$port --script="$protocol-* and not *-brute" -n $1 >> nmap_nse_scan_result.log
+	nmap -Pn -sU -sV -T4 -p$port --script="$protocol-* and not *-brute" -n $1 >> $dir/nmap_nse_scan_result.log
 else
 	echo -e "${RED}===> NSE for $protocol not found! continue with default script scan${NC}"
-	nmap -Pn -sU -sV -T4 -p$port -sC -n $1 >> nmap_nse_scan_result.log
+	nmap -Pn -sU -sV -T4 -p$port -sC -n $1 >> $dir/nmap_nse_scan_result.log
 fi
 done
-echo "${GREEN}### Scanning finished ###${NC}"
- 
+echo -e "${GREEN}### Scanning finished ###${NC}"
+
+### phase 3: print scanning result
+
+sed '/^Starting Nmap/d;/^Nmap scan report/d;/^Host is up/d;/^Service detection performed/d;/^Nmap done/d;/^MAC Address/d;' $dir/nmap_nse_scan_result.log > $dir/NSE_result.log
+cat $dir/NSE_result.log
